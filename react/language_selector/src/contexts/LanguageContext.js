@@ -1,3 +1,3 @@
 import React from 'react';
 
-export default React.createContext('English');
+export default React.createContext('english');
