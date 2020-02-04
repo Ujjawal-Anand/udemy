@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.js": "/udemy/static/js/main.2ccaab7e.chunk.js",
+    "main.js.map": "/udemy/static/js/main.2ccaab7e.chunk.js.map",
+    "runtime-main.js": "/udemy/static/js/runtime-main.ea1cc6bf.js",
+    "runtime-main.js.map": "/udemy/static/js/runtime-main.ea1cc6bf.js.map",
+    "static/js/2.8765e022.chunk.js": "/udemy/static/js/2.8765e022.chunk.js",
+    "static/js/2.8765e022.chunk.js.map": "/udemy/static/js/2.8765e022.chunk.js.map",
+    "index.html": "/udemy/index.html",
+    "precache-manifest.84cf27294ae8de533535819e898b6675.js": "/udemy/precache-manifest.84cf27294ae8de533535819e898b6675.js",
+    "service-worker.js": "/udemy/service-worker.js",
+    "static/js/2.8765e022.chunk.js.LICENSE.txt": "/udemy/static/js/2.8765e022.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ea1cc6bf.js",
+    "static/js/2.8765e022.chunk.js",
+    "static/js/main.2ccaab7e.chunk.js"
+  ]
+}
