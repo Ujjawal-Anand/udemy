@@ -114,4 +114,10 @@ class Button extends React.Component {
 export default Button;
 ```
 
+## Section - 24 Replacing Redux With Context
+
+![context pipeline](screenshots/13.png)
+![context pipeline](screenshots/14.png)
+![context pipeline](screenshots/15.png)
+![context pipeline](screenshots/16.png)
 
