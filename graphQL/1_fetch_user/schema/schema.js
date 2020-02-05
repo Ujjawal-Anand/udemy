@@ -3,23 +3,31 @@ const {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
-    GraphQLSchema
+    GraphQLSchema,
+    GraphQLList
 } = graphql;
 
 const axios = require('axios');
 
 const CompanyType = new GraphQLObjectType({
     name: 'Company',
-    fields: {
+    fields: () =>  ({  // using arrow function to resolve circular reference to UserType
         id: {type: GraphQLString},
         name: {type: GraphQLString},
-        description: {type: GraphQLString}
-    }
+        description: {type: GraphQLString},
+        users: {
+            type: new GraphQLList(UserType), // not just UserList as returns multiple values
+            resolve(parentValue, args) {
+                return axios.get(`http://localhost:3000/companies/${parentValue.id}/users`)
+                    .then(resp => resp.data)
+            }
+        }
+    })
 });
 
 const UserType = new GraphQLObjectType({
     name: 'User',
-    fields: {
+    fields: () => ({
         id: {type: GraphQLString},
         firstName: {type: GraphQLString},
         age: {type: GraphQLInt},
@@ -30,14 +38,14 @@ const UserType = new GraphQLObjectType({
                     .then(resp => resp.data)
             }
         }
-    }
+    })
 });
 
 
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryObjectType',
-    fields: {
+    fields: () => ({
         user: {
         type: UserType,
         args: {id: {type: GraphQLString} },
@@ -45,9 +53,18 @@ const RootQuery = new GraphQLObjectType({
         resolve(parentValue, args) {
             return axios.get(`http://localhost:3000/users/${args.id}`)
                 .then(resp => resp.data)
+            }
+        },
+        company: {
+            type: CompanyType,
+            args: {id: {type: GraphQLString}},
+            resolve(parentValue, args) {
+                return axios.get(`http://localhost:3000/companies/${args.id}`)
+                    .then(resp => resp.data)
+            }
+
         }
-    }
-    }
+    })
 });
 
 module.exports = new GraphQLSchema({
