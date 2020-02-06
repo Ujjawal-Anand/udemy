@@ -28,7 +28,7 @@ class SongCreate extends Component {
                 <h3>Create a New Song</h3>
                 <form onSubmit={this.onSubmit.bind(this)}>
                     <label>Song Title</label>
-                    <input onChange= {event => this.setState({title: event.target.value})} 
+                    <input onChange = {event => this.setState({title: event.target.value})} 
                         value= {this.state.title}/>
                 </form>
             </div>

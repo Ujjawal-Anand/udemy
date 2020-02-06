@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import { Link } from 'react-router';
+
+import LyricsCreate from '../components/LyricsCreate';
+import LyricsList from '../components/LyricsList';
 
 class SongDetail extends Component {
 
@@ -8,22 +12,15 @@ class SongDetail extends Component {
         console.log(this.props);
     }
 
-    renderLyrics(lyrics) {
-        return lyrics.map(({id, likes, content }) => {
-            return (
-            <li key={id} className="collection-item">
-                {content}
-                <i className="material-icons">Like</i>
-            </li>
-            );
-        } );
-    }
-
     render() {
-        console.log(this.props);
+        const { song } = this.props.data;
+        if (!song) return <div>Loading ... </div>;
         return (
             <div>
-               Song Detail
+                <Link to="/">Back</Link>
+                <h3>{song.title}</h3>
+                <LyricsList lyrics={song.lyrics} />
+                <LyricsCreate songId={song.id} />
             </div>
 
         );
