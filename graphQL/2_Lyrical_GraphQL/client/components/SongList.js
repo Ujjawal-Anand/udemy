@@ -6,11 +6,25 @@ import { Link } from 'react-router';
 import fetchSongQuery from '../queries/fetchSongQuery';
 
 class SongList extends Component {
+    
+    onSongDelete(id) {
+        this.props.mutate({
+            variables: {id} })
+            .then(() => this.props.data.refetch()); // notice: different than process in SongCreate
+    }
+
     renderSongList() {
-       return this.props.data.songs.map(song => {
+       return this.props.data.songs.map(({id, title}) => {
            return (
-           <li key={song.id} className="collection-item">
-               { song.title }
+           <li key={id} className="collection-item">
+               { title }
+               <Link to={`songs/${id}`}>
+                    <i className="material-icons">add</i>
+               </Link>
+               <i className="material-icons"
+               onClick= {() => this.onSongDelete(id)}>
+                   delete
+               </i>
            </li>
            );
        });
@@ -21,7 +35,7 @@ class SongList extends Component {
 
         return (
             <div>
-                <h3>Song List </h3>
+                <h3>Song List</h3>
                 <ul className="collection">
                     {this.renderSongList()}
                 </ul>
@@ -33,6 +47,19 @@ class SongList extends Component {
     }
 }
 
+const mutation = gql`
+    mutation DeleteSong($id: ID) {
+        deleteSong(id: $id) {
+            id
+        }
+    }
+`;
 
 
-export default graphql(fetchSongQuery)(SongList);
+
+// export default graphql(fetchSongQuery, mutation)(SongList);
+// This won't work as graphql function doesn't accept multiple parameter
+
+export default graphql(mutation) (
+    graphql(fetchSongQuery)(SongList)
+);
