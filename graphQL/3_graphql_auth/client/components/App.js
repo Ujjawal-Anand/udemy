@@ -2,17 +2,14 @@ import React, { Component } from 'react';
 
 import Header from './Header'
 
-class App extends Component {
-
-    render() {
-        console.log(this.props);
-        return (
-            <div className="container">
-                <Header />
-                <h1>Welcome</h1>
-            </div>
-        )
-    }
-}
+const App = (props) => {
+    return (
+        <div className="container">
+            <Header />
+            {props.children}
+            <h3>Welcome</h3>
+        </div>
+    );
+};
 
 export default App;
