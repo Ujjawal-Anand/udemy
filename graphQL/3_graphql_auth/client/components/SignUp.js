@@ -3,6 +3,7 @@ import { graphql } from 'react-apollo'
 
 import AuthUser from './AuthUser';
 import SignupMutation from '../mutations/SignupUser'
+import CurrentUserQuery from '../queries/CurrentUser'
 
 class SignUp extends Component {
     
@@ -11,7 +12,10 @@ class SignUp extends Component {
             variables: {
                 email,
                 password
-            }
+            },
+            refetchQueries: [
+                {query: CurrentUserQuery}
+            ]
         })
     }
     render() {
