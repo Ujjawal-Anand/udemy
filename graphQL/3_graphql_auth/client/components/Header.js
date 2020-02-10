@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import { graphql } from 'react-apollo'
-import { Link } from 'react-router'
+import { graphql } from 'react-apollo';
+import { Link } from 'react-router';
 
-import UserQuery from '../queries/CurrentUser'
+import UserQuery from '../queries/CurrentUser';
+import LogoutMutation from '../mutations/LogoutMutation';
 
 class Header extends Component {
+
+    onLogoutClick() {
+        this.props.muatate({});
+    }
 
     renderButtons() {
         // console.log(this.props.data);
@@ -13,14 +18,14 @@ class Header extends Component {
         if (User) {
             return (
                 <li>
-                    Signout
+                    <a onClick={this.onLogoutClick().binnd(this)}>Logout</a>
                 </li>
             );
         } else {
             return (
                 <div>
                     <li>
-                        <Link to="signout">SignIn</Link>
+                        <Link to="signin">SignIn</Link>
                     </li>
                     <li>
                         <Link to="signup">SignUp</Link>
@@ -46,4 +51,5 @@ class Header extends Component {
     }
 }
 
-export default graphql(UserQuery)(Header);
+export default graphql(LogoutMutation)(
+    graphql(UserQuery)(Header));
