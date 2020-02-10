@@ -6,19 +6,21 @@ import LoginUser from '../mutations/LoginUser';
 
 
 class Login extends Component {
-    onSubmit(email, password) {
-        this.props.muatate({
+    
+    onSubmit({email, password }) {
+        this.props.mutate({
             variables: {
                 email,
                 password
             }
-        })
+        });
     }
 
     render() {
         return (
             <div>
-                <AuthUser onSubmit={this.onSubmit(email, password)} />
+                <h1>Login</h1>
+                <AuthUser onSubmit={this.onSubmit.bind(this)} />
             </div>
         )
     }

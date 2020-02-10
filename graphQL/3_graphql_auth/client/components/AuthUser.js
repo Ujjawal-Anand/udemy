@@ -9,18 +9,21 @@ class AuthUser extends Component {
 
     onSubmit(e) {
         e.preventDefault();
+        this.props.onSubmit(this.state);
 
     }
 
     render() {
         return (
             <form onSubmit={this.onSubmit.bind(this)}>
-                <label>Email:</label>
-                <input onChange={e => this.setState({email: e.target.value})}
+                
+                <input placeholder="Email" onChange={e => this.setState({email: e.target.value})}
                     value={this.state.email} />
-                <label>Password:</label>
-                <input onChange={e => this.setState({password: e.target.value})}
+                
+                <input placeholder="Password" type="password" 
+                onChange={e => this.setState({password: e.target.value})}
                     value={this.state.password} />
+                <button className="btn btn-primary">Submit</button>
             </form>
         );
     }
