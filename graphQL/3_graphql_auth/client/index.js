@@ -5,9 +5,9 @@ import { ApolloProvider } from 'react-apollo'
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 
 import App from './components/App';
-import SignIn from './components/SignIn';
+import Login from './components/Login';
 import SignUp from './components/SignUp';
-import SignOut from './components/SignOut';
+
 
 // This attaches cookies with request
 const networkInterface = new createNetworkInterface({
@@ -27,9 +27,9 @@ const Root = () => {
     <ApolloProvider client={client}>
       <Router history={hashHistory}>
         <Route path="/" component={App}>
-          <Route path="signin" component={SignIn} />
+          <Route path="Login" component={Login} />
           <Route path="signup" component={SignUp} />
-          <Route path="signout" component={SignOut} />
+          
         </Route>
       </Router>
     </ApolloProvider>

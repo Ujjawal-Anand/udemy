@@ -1,7 +1,7 @@
-import gql from 'apollo-tag';
+import gql from 'graphql-tag';
 
-export gql`
-    muatation {
+export default gql`
+    mutation {
         logout {
             id
             email
