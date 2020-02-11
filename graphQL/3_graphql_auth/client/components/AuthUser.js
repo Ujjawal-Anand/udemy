@@ -13,9 +13,20 @@ class AuthUser extends Component {
 
     }
 
+    renderErrors() {
+        return this.props.errors.map(error => {
+            return (
+                <li key={error}>{error}</li>
+            );
+        })
+    }
+
     render() {
         return (
             <form onSubmit={this.onSubmit.bind(this)}>
+                <ul>
+                    {this.renderErrors()}
+                </ul>
                 
                 <input placeholder="Email" onChange={e => this.setState({email: e.target.value})}
                     value={this.state.email} />

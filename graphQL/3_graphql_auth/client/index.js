@@ -7,6 +7,8 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import App from './components/App';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import Dashboard from './components/Dashboard'
+import requireAuth from './components/requireAuth'
 
 
 // This attaches cookies with request
@@ -29,7 +31,7 @@ const Root = () => {
         <Route path="/" component={App}>
           <Route path="Login" component={Login} />
           <Route path="signup" component={SignUp} />
-          
+          <Route path="dashboard" component={requireAuth(Dashboard)} />
         </Route>
       </Router>
     </ApolloProvider>
