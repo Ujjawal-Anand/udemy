@@ -1,13 +1,20 @@
-durationInput = document.querySelector('#duration');
-startBtn = document.querySelector('#start');
-pauseBtn = document.querySelector('#pause');
+const durationInput = document.querySelector('#duration');
+const startBtn = document.querySelector('#start');
+const pauseBtn = document.querySelector('#pause');
+const circle = document.querySelector('circle')
+let duration;
+let currentOffset = 0;
 
-var timer = new Timer(duration, startBtn, pauseBtn, {
-    onStart() {
-        console.log('Started');
+const perimeter = circle.getAttribute('r')*Math.PI*2;
+circle.setAttribute('stroke-dasharray', perimeter)
+
+var timer = new Timer(durationInput, startBtn, pauseBtn, {
+    onStart(totalDuration) {
+        duration = totalDuration
     },
-    onTick() {
-        console.log('Ticked');
+    onTick(remainingTime) {
+        currentOffset = perimeter * remainingTime/duration - perimeter; //formula to calculate offset
+        circle.setAttribute('stroke-dashoffset', currentOffset)
     },
     onComplete() {
         console.log('Completed');
