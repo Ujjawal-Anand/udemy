@@ -20,6 +20,8 @@ const fetchData = async (searchTerm) => {
             s: searchTerm
         }
     });
+
+    //handles the error
     if(response.data.Error) {
         return [];
     }
@@ -28,11 +30,22 @@ const fetchData = async (searchTerm) => {
 
 const onInput = async (event) => {
     const movies = await(fetchData(event.target.value));
+    
+    // don't show dropdown when movie-list is empty
+    if(!movies.length) {
+        dropdown.classList.remove('is-active');
+        return;
+    }
+
+    // reset the list to remove previously fetched results
     resultWrapper.innerHTML = '';
+    // make the dropdown active
     dropdown.classList.add('is-active');
 
     for (let movie of movies) {
         const option = document.createElement('a');
+        
+        // handles the case of broken image urls
         const posterSrc = movie.Poster === "NA" ? '' : movie.Poster; 
 
         option.classList.add('dropdown-item');
@@ -44,4 +57,12 @@ const onInput = async (event) => {
     }
 }
 
+// add event listner to input
 input.addEventListener('input', debounce(onInput, 1000));
+
+// close dropdown when clicking elsewhere
+document.addEventListener('click', (event) => {  
+    if(!root.contains(event.target)) {
+        dropdown.classList.remove('is-active');
+    }
+})
