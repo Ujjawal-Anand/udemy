@@ -5,24 +5,23 @@ const fetchData = async (searchTerm) => {
             s: searchTerm
         }
     });
-    console.log(response.data)
+    return response.data.Search;
 }
 
-const debounce = (func, delay=1000) => {
-    let timeoutId;
-    return (...args) => {
-        if(timeoutId) {
-            clearTimeout(timeoutId);
-        }
-       timeoutId = setTimeout(() => {
-           func.apply(null, args) 
-        }, delay);
-    };
-}
 
 const input = document.querySelector('#search_input_1');
 
-const onInput = (event) => {
-    fetchData(event.target.value);
+const onInput = async (event) => {
+    const movies = await(fetchData(event.target.value));
+
+    for (let movie of movies) {
+        const div = document.createElement('div');
+
+        div.innerHTML = `
+            <img src='${movie.Poster}' />
+            <h2>${movie.Title}</h2>
+        `;
+        document.querySelector('#target').appendChild(div);
+    }
 }
 input.addEventListener('input', debounce(onInput, 1000));
