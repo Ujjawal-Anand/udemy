@@ -1,68 +1,83 @@
-const root = document.querySelector(".autocomplete");
-root.innerHTML = `
-<label for="search_movie">Search Movie You Are Looking For</label>
-<input class="input" type="text" name="search_movie" />
-<div class="dropdown">
-    <div class="dropdown-menu">
-        <div class="dropdown-content results"></div>
-    </div>
-</div>
-`
 
-const input = document.querySelector('.input');
-const dropdown = document.querySelector('.dropdown');
-const resultWrapper = document.querySelector('.results');
 
-const fetchData = async (searchTerm) => {
+const onMovieSelect = async (movie) => {
     const response = await axios.get('http://www.omdbapi.com/', {
         params: {
             apikey: '69d87029',
-            s: searchTerm
+            i: movie.imdbID
         }
     });
 
-    //handles the error
-    if(response.data.Error) {
-        return [];
-    }
-    return response.data.Search;
+    console.log(response.data);
+    document.querySelector('.summery').innerHTML = movieTemplate(response.data);
+
 }
 
-const onInput = async (event) => {
-    const movies = await(fetchData(event.target.value));
-    
-    // don't show dropdown when movie-list is empty
-    if(!movies.length) {
-        dropdown.classList.remove('is-active');
-        return;
-    }
+const movieTemplate = movieDetail => {
+    return `
+        <article class="media">
+            <figure class="media-left">
+                <p class="image">
+                    <img src="${movieDetail.Poster}" />
+                </p>
+            </figure>
+            <div class="media-content">
+                <div class="content">
+                    <h1>${movieDetail.Title}</h1>
+                    <h4>${movieDetail.Genre}</h4>
+                    <p>${movieDetail.Plot}</p>
+                </div>
+            </div>
+        </article>
 
-    // reset the list to remove previously fetched results
-    resultWrapper.innerHTML = '';
-    // make the dropdown active
-    dropdown.classList.add('is-active');
+        <article class="notification is-primary">
+            <p class="title">${movieDetail.Awards}</p>
+            <p class="subtitle">Awards</p>
+        </article>
 
-    for (let movie of movies) {
-        const option = document.createElement('a');
+        <article class="notification is-primary">
+            <p class="title">${movieDetail.imdbRating}</p>
+            <p class="subtitle">Rating</p>
+        </article>
+
+        <article class="notification is-primary">
+            <p class="title">${movieDetail.imdbVotes}</p>
+            <p class="subtitle">Votes</p>
+        </article>
+
         
-        // handles the case of broken image urls
-        const posterSrc = movie.Poster === "NA" ? '' : movie.Poster; 
+    `
+}
 
-        option.classList.add('dropdown-item');
-        option.innerHTML = `
+createAutoComplete({root: document.querySelector('.autocomplete'),
+    optionItem: (movie) => {
+        const posterSrc = movie.Poster === "NA" ? '' : movie.Poster; 
+        return `
             <img src='${posterSrc}' />
             ${movie.Title}
         `;
-        resultWrapper.appendChild(option);
-    }
-}
+    },
+    onOptionSelect: (movie) => {
+        return onMovieSelect(movie);  
+    },
 
-// add event listner to input
-input.addEventListener('input', debounce(onInput, 1000));
+    inputValue: (movie) => {
+        return movie.Title
+    },
 
-// close dropdown when clicking elsewhere
-document.addEventListener('click', (event) => {  
-    if(!root.contains(event.target)) {
-        dropdown.classList.remove('is-active');
+    async fetchData(searchTerm)  {
+        const response = await axios.get('http://www.omdbapi.com/', {
+            params: {
+                apikey: '69d87029',
+                s: searchTerm
+            }
+        });
+
+        //handles the error
+        if(response.data.Error) {
+            return [];
+        }
+        return response.data.Search;    
     }
-})
+
+});
