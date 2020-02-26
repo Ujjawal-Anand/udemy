@@ -1,6 +1,4 @@
-
-
-const onMovieSelect = async (movie) => {
+const onMovieSelect = async (movie, summeryElement) => {
     const response = await axios.get('http://www.omdbapi.com/', {
         params: {
             apikey: '69d87029',
@@ -8,9 +6,8 @@ const onMovieSelect = async (movie) => {
         }
     });
 
+    summeryElement.innerHTML = movieTemplate(response.data);
     console.log(response.data);
-    document.querySelector('.summery').innerHTML = movieTemplate(response.data);
-
 }
 
 const movieTemplate = movieDetail => {
@@ -36,6 +33,16 @@ const movieTemplate = movieDetail => {
         </article>
 
         <article class="notification is-primary">
+            <p class="title">${movieDetail.BoxOffice}</p>
+            <p class="subtitle">Box Office</p>
+        </article>
+
+        <article class="notification is-primary">
+            <p class="title">${movieDetail.Metascore}</p>
+            <p class="subtitle">Score</p>
+        </article>
+
+        <article class="notification is-primary">
             <p class="title">${movieDetail.imdbRating}</p>
             <p class="subtitle">Rating</p>
         </article>
@@ -49,7 +56,7 @@ const movieTemplate = movieDetail => {
     `
 }
 
-createAutoComplete({root: document.querySelector('.autocomplete'),
+const autocompleteConfig = {
     optionItem: (movie) => {
         const posterSrc = movie.Poster === "NA" ? '' : movie.Poster; 
         return `
@@ -57,9 +64,7 @@ createAutoComplete({root: document.querySelector('.autocomplete'),
             ${movie.Title}
         `;
     },
-    onOptionSelect: (movie) => {
-        return onMovieSelect(movie);  
-    },
+    
 
     inputValue: (movie) => {
         return movie.Title
@@ -79,5 +84,21 @@ createAutoComplete({root: document.querySelector('.autocomplete'),
         }
         return response.data.Search;    
     }
+}
 
+createAutoComplete({
+    ...autocompleteConfig,
+    root: document.querySelector('#left-autocomplete'),
+    onOptionSelect: (movie) => {
+        document.querySelector('.tutorial').classList.add('is-hidden');
+        return onMovieSelect(movie, document.querySelector('#left-summery'));  
+    }
+});
+
+createAutoComplete({
+    ...autocompleteConfig,
+    root: document.querySelector('#right-autocomplete'),
+    onOptionSelect: (movie) => {
+        return onMovieSelect(movie, document.querySelector('#right-summery'));  
+    }
 });
