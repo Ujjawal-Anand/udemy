@@ -5,9 +5,10 @@
 // Render: Whenever the engine processes an update, Render will take a look at all
 //          the different shapes and show them on screen
 // Body: A shape that we are displaying. Can be a circle, rectangle, oval etc
-const { Engine, Render, Runner, World, Bodies, MouseConstraint, Mouse } = Matter;
+const { Engine, Render, Runner, World, Bodies, Body, Events } = Matter;
 
 const engine = Engine.create();
+engine.world.gravity.y = 0;
 const { world } = engine;
 
 const cells = 10;
@@ -125,7 +126,7 @@ stepThroughCells(2,2);
 
 // maze creation
 
-// vertical maze
+// vertical maze block
 verticals.forEach((row, rowIndex) => {
     row.forEach((open, columnIndex) => {
         if(open) {
@@ -134,9 +135,10 @@ verticals.forEach((row, rowIndex) => {
         const verticalMaze = Bodies.rectangle(
             columnIndex * unitLength + unitLength,
             rowIndex * unitLength + unitLength/2,
-            5,
+            10,
             unitLength,
             {
+                label: 'wall',
                 isStatic: true
             }
         );
@@ -144,7 +146,7 @@ verticals.forEach((row, rowIndex) => {
     });
 });
 
-// horizontal maze
+// horizontal maze block
 horizontals.forEach((row, rowIndex) => {
     row.forEach((open, columnIndex) => {
         if(open) {
@@ -154,11 +156,69 @@ horizontals.forEach((row, rowIndex) => {
             columnIndex * unitLength + unitLength/2,
             rowIndex * unitLength + unitLength,
             unitLength,
-            5,
-            {
+            10,
+            {   label: 'wall',
                 isStatic: true
             }
         );
         World.add(world, horizontalMaze);
+    });
+});
+
+// ball
+const ball = Bodies.circle(
+                    unitLength/2, 
+                    unitLength/2, 
+                    unitLength/3,
+                    {
+                        label: 'ball'
+                    });
+World.add(world, ball);
+
+// goal
+const goal = Bodies.rectangle(
+                width-unitLength/4, 
+                height-unitLength/4, 
+                unitLength/2, 
+                unitLength/2,
+                {
+                    label: 'goal',
+                    isStatic: true
+                } );
+World.add(world, goal);
+
+document.addEventListener('keydown', event => {
+    const { x, y} = ball.velocity;
+    if(event.keyCode === 87) {
+        Body.setVelocity(ball, {x, y: y-5}); // move up
+
+    }
+    if(event.keyCode === 68) {
+        Body.setVelocity(ball, {x: x+5, y}); // move right
+    }
+    if(event.keyCode === 83) {
+        Body.setVelocity(ball, {x, y: y+5 }); // move down
+
+    } 
+    if(event.keyCode === 65) {
+        Body.setVelocity(ball, {x: x-5, y}); // move left
+    }
+});
+
+Events.on(engine, 'collisionStart', event => {
+    event.pairs.forEach(collision => {
+        const labels =['ball', 'goal'];
+
+        if(
+            labels.includes(collision.bodyA.label) &&
+            labels.includes(collision.bodyB.label)
+        ) {
+            world.gravity.y = 1;
+            world.bodies.forEach(body => {
+                if(body.label === 'wall') {
+                    Body.setStatic(body, false);
+                }
+            });
+        }
     });
 });
