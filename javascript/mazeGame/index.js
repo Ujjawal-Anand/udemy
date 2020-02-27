@@ -10,9 +10,10 @@ const { Engine, Render, Runner, World, Bodies, MouseConstraint, Mouse } = Matter
 const engine = Engine.create();
 const { world } = engine;
 
-const cell = 3;
+const cells = 10;
 const width = 800;
 const height = 800;
+const unitLength = width/cells
 
 
 const render = Render.create({
@@ -68,9 +69,9 @@ const shuffle = (arr) => {
         // grid[i].push(false);
     // }
 // }
-const grid = Array(cell).fill(null).map(() => Array(cell).fill(false));
-const verticals = Array(cell).fill(null).map(() => Array(cell-1).fill(false));
-const horizontals = Array(cell-1).fill(null).map(() => Array(cell).fill(false));
+const grid = Array(cells).fill(null).map(() => Array(cells).fill(false));
+const verticals = Array(cells).fill(null).map(() => Array(cells-1).fill(false));
+const horizontals = Array(cells-1).fill(null).map(() => Array(cells).fill(false));
 
 const stepThroughCells = (currentRow, currentColumn) => {
     // if cell is visited then return
@@ -93,7 +94,7 @@ const stepThroughCells = (currentRow, currentColumn) => {
         const [nextRow, nextColumn, direction] = neighbor;
 
         // check that neighbor is out of bound
-        if(nextRow < 0 || nextRow >= cell || nextColumn < 0 || nextColumn >= cell) {
+        if(nextRow < 0 || nextRow >= cells || nextColumn < 0 || nextColumn >= cells) {
             continue;
         }
 
@@ -121,3 +122,43 @@ const stepThroughCells = (currentRow, currentColumn) => {
 }
 
 stepThroughCells(2,2);
+
+// maze creation
+
+// vertical maze
+verticals.forEach((row, rowIndex) => {
+    row.forEach((open, columnIndex) => {
+        if(open) {
+            return;
+        }
+        const verticalMaze = Bodies.rectangle(
+            columnIndex * unitLength + unitLength,
+            rowIndex * unitLength + unitLength/2,
+            5,
+            unitLength,
+            {
+                isStatic: true
+            }
+        );
+        World.add(world, verticalMaze);
+    });
+});
+
+// horizontal maze
+horizontals.forEach((row, rowIndex) => {
+    row.forEach((open, columnIndex) => {
+        if(open) {
+            return;
+        }
+        const horizontalMaze = Bodies.rectangle(
+            columnIndex * unitLength + unitLength/2,
+            rowIndex * unitLength + unitLength,
+            unitLength,
+            5,
+            {
+                isStatic: true
+            }
+        );
+        World.add(world, horizontalMaze);
+    });
+});
